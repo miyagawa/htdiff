@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 use strict;
 use vars qw($VERSION);
-$VERSION = 0.02;
+$VERSION = 0.03;
 
 =head1 NAME
 
@@ -10,6 +10,7 @@ htdiff - find difference between structures of two HTML templates
 =head1 SYNOPSIS
 
   htdiff file1 file2
+  htdiff --dump file
 
 =head1 DESCRIPTION
 
@@ -53,14 +54,24 @@ use HTML::Template;
 use Text::Diff;
 
 sub new {
-    my($class, @files) = @_;
-    bless { files => \@files }, $class;
+    my($class, %p) = @_;
+    bless \%p, $class;
 }
 
 sub run {
     my $self = shift;
-    my @tokens = map $self->make_tokens($_), @{$self->{files}};
-    $self->check_directives(@tokens);
+    if ($self->{dump}) {
+	$self->dump_structure;
+    } else {
+	my @tokens = map $self->make_tokens($_), @{$self->{files}};
+	$self->check_directives(@tokens);
+    }
+}
+
+sub dump_structure {
+    my $self = shift;
+    my $structure = $self->make_tokens($self->{dump});
+    print $structure;
 }
 
 sub make_tokens {
@@ -187,10 +198,12 @@ package main;
 
 sub usage {
     (my $me = $0) =~ s@.*/@@;
-    warn "Usage: $me file1 file2\n";
+    warn "Usage: $me file1 file2 / $me --dump file\n";
 }
 
 @ARGV == 2 or usage(), exit;
-
-my $app = HtdiffApp->new(@ARGV);
+my $app = $ARGV[0] eq '--dump'
+    ? HtdiffApp->new(dump => $ARGV[1])
+    : HtdiffApp->new(files => \@ARGV);
 $app->run;
+

@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 use strict;
 use vars qw($VERSION);
-$VERSION = 0.01;
+$VERSION = 0.02;
 
 =head1 NAME
 
@@ -145,7 +145,7 @@ sub regex {
 	            # NAME attribute
                     (?:
                       (?:
-                        [Nn][Aa][Mm][Ee]
+                        (?:[Nn][Aa][Mm][Ee]|[Ee][Xx][Pp][Rr]) # for H::T::Expr
                         \s*=\s*
                       )?
                       (?:

@@ -1,0 +1,8 @@
+Revision history for Perl extension htdiff
+
+0.02
+	- fix parser bug in $post handling
+	  (Thanks to Takefumi Kimura <takefumi@takefumi.com>
+
+0.01  Wed Apr 24 20:43:32 2002
+	- original version
